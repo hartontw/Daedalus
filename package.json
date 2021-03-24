@@ -1,0 +1,34 @@
+{
+  "name": "daedalus",
+  "version": "0.0.1",
+  "description": "Daedalus is a benevolent Artificial Intelligence.",
+  "main": "index.js",
+  "scripts": {
+    "start": "node src/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hartontw/Daedalus.git"
+  },
+  "keywords": [
+    "discord",
+    "bot"
+  ],
+  "author": "Daniel \"Harton\"",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/hartontw/Daedalus/issues"
+  },
+  "homepage": "https://github.com/hartontw/Daedalus#readme",
+  "dependencies": {
+    "cheerio": "^1.0.0-rc.5",
+    "discord.js": "^12.5.1",
+    "dotenv": "^8.2.0",
+    "highlight.js": "^10.7.1",
+    "mathjax-node-svg2png": "^2.0.0",
+    "minimist": "^1.2.5",
+    "request": "^2.88.2",
+    "winston": "^3.3.3",
+    "xml-js": "^1.6.11"
+  }
+}
