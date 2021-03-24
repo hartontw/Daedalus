@@ -1,7 +1,7 @@
 const request = require('request');
 const cheerio = require('cheerio');
 const convert = require('xml-js');
-const { RichEmbed } = require('discord.js');
+const { MessageEmbed } = require('discord.js');
 
 const Command = require('./command');
 
@@ -127,7 +127,7 @@ class Random extends Command {
     async sendArtStation() {
         const artstation = await this.constructor.getArtstation();
 
-        const embed = new RichEmbed();
+        const embed = new MessageEmbed();
         embed.setColor(0x00AE86);
         embed.setAuthor(artstation.author, artstation.avatar);
         embed.setTitle(artstation.title);

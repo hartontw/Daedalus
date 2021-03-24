@@ -1,6 +1,6 @@
 const Command = require('./command');
 const package = require('../../package.json');
-const { RichEmbed } = require('discord.js');
+const { MessageEmbed } = require('discord.js');
 
 const githubUser = package.repository.url.match(/git\+https:\/\/github.com\/(.*?)\//)[1];
 const githubName = package.name;
@@ -47,7 +47,7 @@ class Dice extends Command {
             for (let j = 0; j < amount; j++) {
                 const value = Math.floor(Math.random() * type) + 1;
 
-                const embed = new RichEmbed();
+                const embed = new MessageEmbed();
 
                 const color = colors[`d${type}`];
                 if (color) {

@@ -4,7 +4,7 @@ const path = require('path');
 const Command = require('./command');
 const { codeMessage } = require('../utils');
 
-const { RichEmbed } = require('discord.js');
+const { MessageEmbed } = require('discord.js');
 
 class CodePen extends Command {
     static get description() {
@@ -120,7 +120,7 @@ class CodePen extends Command {
                         url += `?editors=${this.args.editors}`;
                 }
 
-                const embed = new RichEmbed()
+                const embed = new MessageEmbed()
                     .setColor(0x344700)
                     .setTitle('**__' + info.title + '__**')
                     .setURL(url)
