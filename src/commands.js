@@ -9,6 +9,8 @@ const CodePen = require('./commands/codepen');
 const Dice = require('./commands/dice');
 const Cercanias = require('./commands/cercanias');
 const Random = require('./commands/random');
+const Calculator = require('./commands/calculator');
+const Vector = require('./commands/vector');
 
 const commands = {
     help: Help,
@@ -20,6 +22,8 @@ const commands = {
     dice: Dice,
     cercanias: Cercanias,
     random: Random,
+    calc: Calculator,
+    vect: Vector
 }
 
 async function user(message) {

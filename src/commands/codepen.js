@@ -53,7 +53,7 @@ class CodePen extends Command {
 
     static getInfo(code) {
         return new Promise((resolve, reject) => {
-            request(`http://codepen.io/api/oembed?format=json&url=https://codepen.io/pen/${code}`, (err, res, body) => err ? reject(err) : resolve(body));
+            request(`https://codepen.io/api/oembed?format=json&url=https://codepen.io/pen/${code}`, (err, res, body) => err ? reject(err) : resolve(body));
         });
     }
 

@@ -7,7 +7,7 @@ const { codeMessage } = require('../utils');
 const aliases = {
     'text': '',
     'C#': 'cs',
-    'C++': 'cpp',
+    'C++': 'cpp'
 }
 
 class Pastebin extends Command {
@@ -26,12 +26,12 @@ class Pastebin extends Command {
         return [{
                 name: 'language',
                 alias: 'l',
-                description: 'Set de language of the paste.',
+                description: 'Set language of the paste.',
             },
             {
                 name: 'auto',
                 alias: 'a',
-                description: 'Auto-Detect the language of the paste.'
+                description: 'Detect code language based on the content.'
             }
         ].concat(Command.argsInfo);
     }
@@ -41,7 +41,8 @@ class Pastebin extends Command {
             request(`https://pastebin.com/${code}`, (err, res, body) => {
                 if (!err) {
                     try {
-                        const match = body.match(/<span class=\"h_640\"><a[^>]*?class=\"buttonsm\"[^>]*?>(.*?)<\/a><\/span>/);
+                        //const match = body.match(/<span class=\"h_640\"><a[^>]*?class=\"buttonsm\"[^>]*?>(.*?)<\/a><\/span>/);
+                        const match = body.match(/<a.*class=\"btn -small h_800\"[^>]*>(.*?)<\/a>/);
                         if (match) {
                             let language = match[1];
 

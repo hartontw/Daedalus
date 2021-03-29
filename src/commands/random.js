@@ -4,6 +4,7 @@ const convert = require('xml-js');
 const { MessageEmbed } = require('discord.js');
 
 const Command = require('./command');
+const Pastebin = require('./pastebin');
 
 class Random extends Command {
     static get description() {
@@ -24,7 +25,7 @@ class Random extends Command {
     static get argsInfo() {
         return [{
             name: 'amount',
-            alias: '-a',
+            alias: 'a',
             description: 'Sets the random replies amount.',
         }].concat(Command.argsInfo);
     }
@@ -92,14 +93,14 @@ class Random extends Command {
                 if (!err) {
                     const $ = cheerio.load(body);
                     const codes = [];
-                    let x;
-                    const links = $('.maintable tr td a').each((i, a) => {
-                        x = a;
-                        //codes.push(a.attribs.href);
+                    $('.maintable tr td a').each((i, a) => {
+                        const href = a.attribs.href;
+                        if (!href.includes('archive')) {
+                            codes.push(href.replace('/', ''));
+                        }
                     });
                     const index = Math.floor(Math.random() * codes.length);
-                    //resolve(codes[index]);
-                    resolve(x);
+                    resolve(codes[index]);
                 } else reject(err);
             });
         });
@@ -146,24 +147,27 @@ class Random extends Command {
     }
 
     async sendPastebin() {
-        const code = await this.constructor.getPastebin();
-        console.log(code);
-        //const pastebinCommand = new Pastebin(this.message, { _: [code.substring(1)] });
-        //return await pastebinCommand.execute();
+        const code = await this.constructor.getPastebin();        
+        const pastebinCommand = new Pastebin(this.message, { _: [code] });
+        return await pastebinCommand.execute();
     }
 
     async sendInteger(s = 0, e = 100) {
         if (s > e)
             s, e = e, s;
 
-        return s + Math.floor(Math.random() * (e - s));
+        const r = s + Math.floor(Math.random() * (e - s));
+
+        return await this.send(r);
     }
 
     async sendNumber(s = 0, e = 1) {
         if (s > e)
             s, e = e, s;
 
-        return s + Math.random() * (e - s);
+        const r = s + Math.random() * (e - s);
+
+        return await this.send(r);
     }
 
     async sendRandom(option) {
@@ -171,8 +175,8 @@ class Random extends Command {
             case 'integer':
                 return await this.sendInteger(this.args._[1], this.args._[2]);
             case 'number':
-                return await this.sendInteger(this.args._[1], this.args._[2]);
-            case 'arstation':
+                return await this.sendNumber(this.args._[1], this.args._[2]);
+            case 'artstation':
                 return await this.sendArtStation();
             case 'sketchfab':
                 return await this.sendSketchfab();
@@ -185,7 +189,7 @@ class Random extends Command {
 
     static get options() {
         return {
-            art: ['arstation', 'sketchfab'],
+            art: ['artstation', 'sketchfab'],
             code: ['gist', 'github', 'pastebin']
         };
     }

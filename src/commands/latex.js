@@ -1,12 +1,19 @@
 const { MessageAttachment } = require('discord.js');
-const mjAPI = require("mathjax-node-svg2png");
 const Command = require('./command');
+const svg2img = require('svg2img');
 
-mjAPI.config({
-    MathJax: { TeX: { extensions: ["color.js"] } }
-});
-
-mjAPI.start();
+function convert(svg, width, height) {
+    return new Promise( (resolve, reject) => {
+        svg2img(svg, {width, height, preserveAspectRatio:true}, function(error, buffer) {
+            if (error) {
+                reject(error);
+            }
+            else {
+                resolve(buffer);
+            }
+        });
+    });
+}
 
 class Latex extends Command {
     static get description() {
@@ -31,15 +38,33 @@ class Latex extends Command {
         ].concat(Command.argsInfo);
     }
 
-    static async getBuffer(formula, color = 'white', scale = 2) {
-        const data = await mjAPI.typeset({
-            math: `{\\color{${color}}{${formula}}}`,
-            format: "TeX",
-            png: true,
-            scale
+    static async getBuffer(formula, color = 'white', scale = 1) {
+        const MathJax = await require('mathjax').init({
+            loader: {load: ['[tex]/color', 'output/svg']},
+            tex: {packages: {'[+]': ['color']}}
         });
 
-        return Buffer.from(data.png.replace('data:image/png;base64,', ''), 'base64');
+        let svg = MathJax.tex2svg(`{\\color{${color}}${formula}}`, {display: false});
+        svg = MathJax.startup.adaptor.innerHTML(svg);
+
+        const height = 30 * scale;
+        let width = height;
+
+        let g = svg.match(/\<svg([^\>]+)/);
+        if (g && g[1]) {
+            let w = g[1].match(/width="([^e]+)/);
+            let h = g[1].match(/height="([^e]+)/);
+
+            w = w && w[1] ? w[1] : null;
+            h = h && h[1] ? h[1] : null;
+
+            if (w && h) {
+                let ar = w / h;
+                width = height * ar;
+            }
+        }
+
+        return await convert(svg, width, height);
     }
 
     async run() {
@@ -49,7 +74,6 @@ class Latex extends Command {
             return await this.send(attachment);
 
         } catch (error) {
-            console.error(error);
             return this.error(error);
         }
     }
