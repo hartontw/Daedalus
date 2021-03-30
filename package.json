@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node src/index.js",
-    "dev": "nodemon src/index.js"
+    "dev": "nodemon src/index.js -e js,ejs"
   },
   "repository": {
     "type": "git",
@@ -25,13 +25,17 @@
     "cheerio": "^1.0.0-rc.5",
     "discord.js": "^12.5.1",
     "dotenv": "^8.2.0",
+    "ejs": "^3.1.6",
+    "express": "^4.17.1",
+    "fast-xml-parser": "^3.19.0",
     "highlight.js": "^10.7.1",
     "mathjax": "^3.1.2",
     "minimist": "^1.2.5",
     "request": "^2.88.2",
     "svg2img": "^0.9.1",
     "winston": "^3.3.3",
-    "xml-js": "^1.6.11"
+    "xml-js": "^1.6.11",
+    "youtube-search": "^1.1.6"
   },
   "devDependencies": {
     "nodemon": "^2.0.7"
