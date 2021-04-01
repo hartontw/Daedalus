@@ -10,11 +10,16 @@
             display: flex;
             flex: 1 1 auto;
         }
+
+        .yticon {
+            width: 50px;
+            height: 50px;
+        }
     </style>
     <title>Daedalus</title>
 </head>
 <body>
-    <h1><span class="badge bg-primary">Daedalus</span></h1>  
+    <h1><span class="badge bg-primary">Daedalus</span><a href="/youtube"><img src="https://pbs.twimg.com/profile_images/1308106203860529152/yOwTDF9G_400x400.jpg" class="yticon"></a></h1>  
     <div class="list-group">
         <%for (let guild of guilds){%>     
         <a href="/guilds/<%=guild.id%>">

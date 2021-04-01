@@ -2,45 +2,89 @@ const fs = require('fs');
 
 const FILE = 'data.json';
 
-let info = { lastUpdate: Date.now(), channels: {} }
+let info = { 
+    lastUpdate: Date.now(), 
+    youtube: { 
+        cronjob: {
+            rule: '0 0 0 * * *',
+            timeZone: 'Europe/Madrid'
+        }, 
+        lastUpdate: Date.now() 
+    }, 
+    channels: {} 
+}
 
-function load(channels) {
+function start() {
     if (fs.existsSync(FILE)) {
         info = JSON.parse(fs.readFileSync(FILE));
     }
-
-    const existing = {};
-    for(let id in info.channels) {
-        if (channels.get(id)) {
-            existing[id] = info.channels[id];
-        }
-    }
-
-    if (Object.keys(existing).length === Object.keys(info.channels).length) {
-        info.channels = existing;
-        fs.writeFileSync(FILE, JSON.stringify(info));
-    }
-
     return info;
 }
 
-function loadChannel(id) {
-    return info.channels[id];
+function getLastUpdate() {
+    return info.lastUpdate;
 }
 
-function updateDate() {
-    info.lastUpdate = Date.now();
+function getYouTubeCronJob() {
+    return info.youtube.cronjob;
+}
+
+function getYouTubeLastUpdate() {
+    return info.youtube.lastUpdate;
+}
+
+function getChannels(channels) {
+
+    if (channels) {
+        const existing = {};
+        for(let id in info.channels) {        
+            if (channels.get(id)) {
+                existing[id] = info.channels[id];
+            }
+        }
+    
+        if (Object.keys(existing).length === Object.keys(info.channels).length) {
+            info.channels = existing;
+            fs.writeFileSync(FILE, JSON.stringify(info));
+        }
+    }
+
+    return info.channels;
+}
+
+function getChannelLinks(channelID) {
+    return info.channels[channelID];
+}
+
+function setLastUpdate(date) {
+    info.lastUpdate = date || Date.now();
     fs.writeFileSync(FILE, JSON.stringify(info));
 }
 
-function saveChannel(id, channel) {
-    info.channels[id] = channel;
+function setYouTubeCronJob(cronjob) {
+    info.youtube.cronjob = cronjob;
+    fs.writeFileSync(FILE, JSON.stringify(info));
+}
+
+function setYouTubeLastUpdate(date) {
+    info.youtube.lastUpdate = date || Date.now();
+    fs.writeFileSync(FILE, JSON.stringify(info));
+}
+
+function setChannelLinks(id, links) {
+    info.channels[id] = links;
     fs.writeFileSync(FILE, JSON.stringify(info));
 }
 
 module.exports = {
-    load,
-    loadChannel,
-    updateDate,
-    saveChannel
+    start,
+    getLastUpdate,
+    getYouTubeCronJob,
+    getYouTubeLastUpdate,
+    getChannels,
+    getChannelLinks,
+    setLastUpdate,
+    setYouTubeCronJob,
+    setYouTubeLastUpdate,
+    setChannelLinks
 }

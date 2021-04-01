@@ -23,6 +23,7 @@
   "homepage": "https://github.com/hartontw/Daedalus#readme",
   "dependencies": {
     "cheerio": "^1.0.0-rc.5",
+    "cron": "^1.8.2",
     "discord.js": "^12.5.1",
     "dotenv": "^8.2.0",
     "ejs": "^3.1.6",
