@@ -42,6 +42,7 @@ module.exports = (date, link) => {
 
 TODO:
 - Add admin password
+- Replace request module
 - Improve workaround to add commands
 - Add more database connectors
 - Improve frontend design

@@ -1,6 +1,8 @@
 function getDB() {
+    const path = require('path');
     const fs = require('fs');
-    const dependencies = JSON.parse(fs.readFileSync('./package.json')).dependencies;
+    const package = path.join(__dirname, '..', '..', 'package.json');
+    const dependencies = JSON.parse(fs.readFileSync(package)).dependencies;
     if (dependencies.mongoose) return require('./mongo/index');
     //else if (dependencies.sqlite) return requite('./sqlite/index);
     //else if (dependencies.mariadb) return requite('./mariadb/index);
