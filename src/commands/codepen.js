@@ -2,7 +2,7 @@ const request = require('request');
 const path = require('path');
 
 const Command = require('./command');
-const { codeMessage } = require('../utils');
+const { codeMessage } = require('./utils');
 
 const { MessageEmbed } = require('discord.js');
 

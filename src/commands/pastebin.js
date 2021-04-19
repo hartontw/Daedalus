@@ -2,7 +2,7 @@ const request = require('request');
 const highlight = require('highlight.js');
 
 const Command = require('./command');
-const { codeMessage } = require('../utils');
+const { codeMessage } = require('./utils');
 
 const aliases = {
     'text': '',

@@ -9,10 +9,10 @@ module.exports = (date, link) => {
                     let entries = [];
                     body = parser.parse(body);                        
                     if (body.feed) {
-                        entries = body.feed.entry.filter(i => Date.parse(i.published) > date).map(i => i.link || i.id);                
+                        entries = body.feed.entry.filter(i => new Date(i.published) > date).map(i => i.link || i.id);  
                     }
                     else if (body.rss) {
-                        entries = body.rss.channel.item.filter(i => Date.parse(i.pubDate) > date).map(i => i.link || i.guid);
+                        entries = body.rss.channel.item.filter(i => new Date(i.pubDate) > date).map(i => i.link || i.guid);
                     }
                     resolve(entries.reverse());
                 }

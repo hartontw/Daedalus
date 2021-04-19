@@ -1,0 +1,134 @@
+<%- include('../templates/header'); -%>
+<body>
+    <form id="deleteLink" method="POST" action="/links/delete/<%=link._id%>"></form>
+    <div class="container-fluid">
+    <h2><a href="/"><span class="badge bg-primary"><%=bot%></span></a> › <a href="/links">Links</a> › <%= link.name || link._id %> › <a href="#" onclick="document.getElementById('deleteLink').submit();"><span class="badge bg-danger">Delete</span></a></h2>
+    <form id="form" action="/links/edit/<%= link._id %>" method="POST" onsubmit="return allValid()">
+        <div class="mb-3">
+            <label for="name" class="form-label">Link Name</label>
+            <input class="form-control" id="name" name="name" type="text" placeholder="Name" aria-label="default input example" value="<%= link.name %>">
+        </div>
+        <div class="mb-3">
+            <label for="destination" class="form-label">Destination URL *</label>
+            <input class="form-control" id="destination" name="destination" type="text" placeholder="https://host.domain" aria-label="default input example" oninput="checkUrl(this)" value="<%= link.destination %>">
+        </div>       
+        <div class="mb-3">
+            <label for="pictureURL" class="form-label">Picture URL</label>
+            <input class="form-control" id="pictureURL" name="pictureURL" type="text" placeholder="https://host.domain/image.ext" aria-label="default input example" oninput="checkPicture(this)" value="<%= link.pictureURL %>">
+        </div>    
+        <label class="form-label">Cronjob *</label>
+        <div class="input-group mb-3">
+        <input class="form-control" name="cronrule" type="text" placeholder="* * * * * *" value="<%= link.cronjob.rule %>" oninput="checkRule(this)">
+        <% if (zones) { %>
+            <select id="timezone" name="timezone" class="form-select" aria-label="Default select example">
+                <% for (let z of zones) { %>
+                    <option <% if (z===link.cronjob.timezone ) { %> selected <% } %> value="<%=z%>"><%=z%></option>
+                <% } %>
+            </select>
+        <% } else { %>
+            <input class="form-control" name="timezone"  type="text" placeholder="Zone/City" value="<%= link.cronjob.timezone %>" oninput="checkZone(this)">
+        <% } %>        
+        </div>
+        <input class="btn btn-lg btn-primary btn-block" type="submit">
+    </form>
+    <br />
+    <ul class="list-group">
+        <%for (let guild of guilds){%>          
+        <li class="list-group-item clearfix" style="background-color:#FED;">           
+            <a data-bs-toggle="collapse" href="#g<%=guild.id%>" role="button" aria-expanded="false" aria-controls="g<%=guild.id%>" style="text-decoration: none;">
+                <img src="<%=guild.icon%>" style="width:50px; height:50px; margin-right: 10px;"><%=guild.name%> 
+            </a>
+            <div class="collapse" id="g<%=guild.id%>">
+                <ul class="list-group" style="margin-top:5px;">
+                <%for (let channel of guild.channels){%>                                   
+                    <li class="list-group-item clearfix" style="background-color:#EDC">                                     
+                        <% if (link.channels.includes(channel.id)) { %>
+                            <form id="form" action="/links/<%= link._id %>/remove" method="POST">
+                                <input type="hidden" name="channelID" value="<%=channel.id%>">
+                                <label class="form-label"><%=channel.name%></label>
+                                <button class="btn btn-danger" type="submit" style="float:right;">REMOVE</button>                                                                   
+                            </form>
+                        <% } else { %>    
+                            <form id="form" action="/links/<%= link._id %>/add" method="POST">
+                                <input type="hidden" name="channelID" value="<%=channel.id%>">
+                                <label class="form-label"><%=channel.name%></label>
+                                <button class="btn btn-success" type="submit" style="float:right;">ADD</button>                                                                   
+                            </form>
+                        <% } %>     
+                    </li>
+                <%}%>
+                </ul>
+            </div>
+        </li>    
+        <%}%>
+    </ul>
+    </div>
+</body>
+<script>
+    function setFlag(e, valid) {
+        if (valid) {
+            e.classList.remove("is-invalid");
+        }
+        else {
+            e.classList.add("is-invalid");
+        }
+    }
+
+    function evaluateRule(rule) {
+        if (rule.match(/[*],|(,[*](?![/]))/)) return false;
+
+        let parts = rule.split(' ').map(p => p.split(','));
+
+        if (parts.length !== 6) return false;
+
+        const ranges = [
+            '[0-5]?\\d',
+            '[0-5]?\\d',
+            '[01]?\\d|2[0-3]',
+            '[1-9]|[12]\\d|3[01]',
+            '[1-9]|1[0-2]',
+            '[0-6]'
+        ];
+
+        const eval = (nums) => new RegExp(`^((?<min>${nums})(?:-(?<max>${nums})(?:[/]${nums})?)?|[*]([/]${nums})?)$`);
+
+        for (let p in parts) {
+            for (let e of parts[p]) {
+                const match = e.match(eval(ranges[p]));
+                if (!match) return false;
+                if (match.groups && Number(match.groups.max) < Number(match.groups.min)) return false;
+            }
+        }
+
+        return true;
+    }
+
+    function checkUrl(e) {
+        setFlag(e, e.value && e.value.length > 0 && e.value.match(/(http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-/]))?/));
+    }
+
+    function checkPicture(e) {
+        setFlag(e, !e.value || e.value.length === 0 || e.value.match(/(http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-/]))?/));
+    }
+
+    function checkRule(e) {
+        setFlag(e, e.value && e.value.length > 0 && evaluateRule(e.value));
+    }
+
+    function evaluateZone(zone) {
+        return zone.match(/^(?:[A-Z][a-z]+(?:\/[A-Z|a-z|_|\-|\+|0-9]+)+)|CET|CST6CDT|EET|EST5EDT|EST|MET|MST7MDT|MST|PST8PDT|HST|WET$/);
+    }
+
+    function checkZone(e) {
+        setFlag(e, e.value && e.value.length > 0 && evaluateZone(e.value));
+    }
+
+    function allValid() {
+        const inputs = document.getElementsByTagName("input");
+        for (let input of inputs) {
+            if (input.classList.contains('is-invalid')) return false;
+        }
+        return true;
+    }
+</script>
+<%- include('../templates/footer'); -%>

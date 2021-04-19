@@ -1,16 +1,16 @@
 const parseArgs = require('minimist');
 
-const Help = require('./commands/help');
-const Latex = require('./commands/latex');
-const Pastebin = require('./commands/pastebin');
-const Hastebin = require('./commands/hastebin');
-const Gist = require('./commands/gist');
-const CodePen = require('./commands/codepen');
-const Dice = require('./commands/dice');
-const Cercanias = require('./commands/cercanias');
-const Random = require('./commands/random');
-const Calculator = require('./commands/calculator');
-const Vector = require('./commands/vector');
+const Help = require('./help');
+const Latex = require('./latex');
+const Pastebin = require('./pastebin');
+const Hastebin = require('./hastebin');
+const Gist = require('./gist');
+const CodePen = require('./codepen');
+const Dice = require('./dice');
+const Cercanias = require('./cercanias');
+const Random = require('./random');
+const Calculator = require('./calculator');
+const Vector = require('./vector');
 
 const commands = {
     help: Help,

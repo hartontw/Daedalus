@@ -51,7 +51,6 @@ class Gist extends Command {
                 if (!err) {
                     try {
                         const filename = body.match(/<strong.*class=\"user-select-contain gist-blob-name css-truncate-target\"[^>]*?><a[^>]*?>(.*?)<\/a><\/strong>/)[1];
-                        console.log(filename);
                         const extension = filename.substring(filename.lastIndexOf('.') + 1, filename.length);
                         const description = body.match(/<meta[^>]*?property=\"og:title\"[^>]*?content=\"(.*?)\"[^>]*?\/>/)[1];
                         const avatar = body.match(/<a class=\"avatar gist-avatar\"[^>]*?><img[^>]*?src=\"(.*?)\"/)[1];

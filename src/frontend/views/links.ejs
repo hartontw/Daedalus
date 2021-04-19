@@ -1,0 +1,20 @@
+<%- include('../templates/header'); -%>
+<body>
+    <div class="container-fluid"">
+        <h2><a href="/"><span class="badge bg-primary"><%=bot%></span></a> › Links › <a href="/links/new"><span class="badge bg-success">New</span></a></h2>
+        <ul class="list-group">
+        <%for (let link of links){%>  
+        <a href="/links/<%=link._id%>" style="text-decoration: none;">
+          <li class="list-group-item clearfix" style="background-color:#FED;">            
+            <h3 class="list-group-item-heading">
+                <img class="img-responsive img-rounded" src="<%=link.pictureURL%>" style="width: 100px;height: 100px;margin-right: 10px;"/>
+                <%=link.name%>
+            </h3>
+            <span class="badge bg-primary"><%=link.destination%></span>
+          </li>
+        </a>
+        <%}%>
+        </ul>
+      </div>
+</body>
+<%- include('../templates/footer'); -%>

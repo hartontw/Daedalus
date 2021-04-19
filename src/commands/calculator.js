@@ -59,8 +59,6 @@ class Calculator extends Command {
 
     async run() {
         try {            
-            console.log(this);
-
             let expression = this.constructor.format(this.message.content);
 
             expression = this.constructor.resolveParentheses(expression);

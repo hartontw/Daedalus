@@ -8,7 +8,7 @@ module.exports = (date, link) => {
             if (!err)  {                
                 const results = [];
                 const $ = cheerio.load(body);
-                $('.projects-badge-list li').each(function (i, elm) {
+                $('.job-item').each(function (i, elm) {
                     let jobDate = $(elm).find('.job-item__date').text().trim().split('/');
                     jobDate = new Date(Date.UTC(Number(jobDate[2]) + 2000, (jobDate[1] - 1) % 12, jobDate[0]));
         

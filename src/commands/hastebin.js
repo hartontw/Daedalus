@@ -3,7 +3,7 @@ const highlight = require('highlight.js');
 const path = require('path');
 
 const Command = require('./command');
-const { codeMessage } = require('../utils');
+const { codeMessage } = require('./utils');
 
 const languageSubset = [
     'ruby',

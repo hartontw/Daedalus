@@ -1,0 +1,297 @@
+<%- include('../templates/header'); -%>
+<body>
+    <div class="container-fluid">
+        <h2><a href="/"><span class="badge bg-primary"><%=bot%></span></a> › <a href="/apis/">APIS</a> › Udemy</h2>
+        <form id="form" action="/links/new" method="post">
+            <div id="query" class="alert alert-primary" role="alert">
+                https://www.udemy.com/api-2.0/courses/?fields[course]=@default,created
+            </div>
+            <input type="hidden" id="destination" name="destination" value="https://www.udemy.com/api-2.0/courses/?fields[course]=@default,created">
+            <input type="hidden" name="name" value="Udemy">
+            <input type="hidden" name="pictureURL" value="https://aefam.org/wp-content/uploads/2018/10/udemy-logo.png">
+            <input type="hidden" name="cronrule" value="0 0 */1 * * *">
+            <input type="hidden" name="timezone" value="Europe/Madrid">
+            <input class="btn btn-lg btn-primary btn-block" type="submit">
+        </form>
+        <div style="margin:20px; padding: 20px; border: 1px solid white;">
+        <div class="row mb-3">
+            <label for="page" class="col-sm-2 col-form-label">page</label>
+            <div class="col-sm-2">
+              <input type="number" class="form-control" id="page" aria-describedby="pageHelpInline" min="1" max="10000" oninput="onChange(this)">
+            </div>
+            <div class="col-auto">
+                <span id="pageHelpInline" class="form-text">
+                    A numeric value indicating the current page. page*page_size cannot be larger than 10000.
+                </span>
+            </div>
+        </div>
+        <div class="row mb-3">
+            <label for="page_size" class="col-sm-2 col-form-label">page_size</label>
+            <div class="col-sm-2">
+              <input type="number" class="form-control" id="page_size" aria-describedby="page_sizeHelpInline" min="1" max="10000" oninput="onChange(this)">
+            </div>
+            <div class="col-auto">
+                <span id="page_sizeHelpInline" class="form-text">
+                    A numeric value indicating the page size.
+                </span>
+            </div>
+        </div>
+        <div class="row mb-3">
+            <label for="search" class="col-sm-2 col-form-label">search</label>
+            <div class="col-sm-3">
+              <input type="text" class="form-control" id="search" aria-describedby="searchHelpInline" oninput="onChange(this)">
+            </div>
+            <div class="col-auto">
+                <span id="searchHelpInline" class="form-text">
+                    Filter courses by a search term.
+                </span>
+            </div>
+        </div>
+        <div class="row mb-3">
+            <label for="category" class="col-sm-2 col-form-label">category</label>
+            <div class="col-sm-3">
+                <select id="category" class="form-select" aria-label="All"
+                aria-describedby="categoryHelpInline" onchange="onChange(this)">
+                <option selected>All</option>
+                <% for (let category of categories) { %>
+                    <option value="<%=category%>">
+                        <%=category%>
+                    </option>
+                    <% } %>
+            </select>
+            </div>
+            <div class="col-auto">
+                <span id="categoryHelpInline" class="form-text">
+                    Filter courses by <a href="https://www.udemy.com/developers/affiliate/models/course-category">primary category</a>.
+                </span>
+            </div>
+        </div>
+        <div class="row mb-3">
+            <label for="subcategory" class="col-sm-2 col-form-label">subcategory</label>
+            <div class="col-sm-3">
+                <select id="subcategory" class="form-select" aria-label="All"
+                aria-describedby="subcategoryHelpInline" onchange="onChange(this)">
+                <option selected>All</option>
+                <% for (let subCategory of subCategories) { %>
+                    <option value="<%=subCategory%>">
+                        <%=subCategory%>
+                    </option>
+                    <% } %>
+            </select>
+            </div>
+            <div class="col-auto">
+                <span id="subcategoryHelpInline" class="form-text">
+                    Filter courses by <a
+                    href="https://www.udemy.com/developers/affiliate/models/course-subcategory">primary
+                    subcategory</a>.
+                </span>
+            </div>
+        </div>
+        <div class="row mb-3">
+            <label for="price" class="col-sm-2 col-form-label">price</label>
+            <div class="col-sm-2">
+                <select id="price" class="form-select" aria-label="All"
+                aria-describedby="priceHelpInline" onchange="onChange(this)">
+                <option selected>All</option>
+                <option value="price-paid">price-paid</option>
+                <option value="price-free">price-free</option>
+            </select>
+            </div>
+            <div class="col-auto">
+                <span id="priceHelpInline" class="form-text">
+                    Rank courses by price-paid, or price-free. 
+                </span>
+            </div>
+        </div>
+        <div class="row mb-3">
+            <label for="is_affiliate_agreed" class="col-sm-2 col-form-label">is_affiliate_agreed</label>
+            <div class="col-sm-1">
+                <input type="checkbox" class="form-check-input" id="is_affiliate_agreed" aria-describedby="is_affiliate_agreedHelpInline" onChange="onChange(this)">
+            </div>
+            <div class="col-auto">
+                <span id="is_affiliate_agreedHelpInline" class="form-text">
+                    Filter courses that are affiliate agreed. 
+                </span>
+            </div>
+        </div>
+        <div class="row mb-3">
+            <label for="is_deals_agreed" class="col-sm-2 col-form-label">is_deals_agreed</label>
+            <div class="col-sm-1">
+                <input type="checkbox" class="form-check-input" id="is_deals_agreed" aria-describedby="is_deals_agreedHelpInline" onChange="onChange(this)">
+            </div>
+            <div class="col-auto">
+                <span id="is_deals_agreedHelpInline" class="form-text">
+                    Filter courses that are deals agreed.
+                </span>
+            </div>
+        </div>
+        <div class="row mb-3">
+            <label for="language" class="col-sm-2 col-form-label">language</label>
+            <div class="col-sm-3">
+                <select id="language" class="form-select" aria-label="All"
+                aria-describedby="languageHelpInline" onchange="onChange(this)">
+                <option selected>All</option>
+                <% for (let languaje of languajes) { %>
+                    <option value="<%=languaje.alpha2%>">
+                        <%=languaje.English%>
+                    </option>
+                    <% } %>
+            </select>
+            </div>
+            <div class="col-auto">
+                <span id="languageHelpInline" class="form-text">
+                    Filter courses by <a href="http://www.loc.gov/standards/iso639-2/php/code_list.php">alpha-2 language code</a>.
+                </span>
+            </div>
+        </div>
+        <div class="row mb-3">
+            <label for="has_closed_caption" class="col-sm-2 col-form-label">has_closed_caption</label>
+            <div class="col-sm-1">
+                <input type="checkbox" class="form-check-input" id="has_closed_caption" aria-describedby="has_closed_captionHelpInline" onChange="onChange(this)">
+            </div>
+            <div class="col-auto">
+                <span id="has_closed_captionHelpInline" class="form-text">
+                    Filter courses that has closed caption.
+                </span>
+            </div>
+        </div>
+        <div class="row mb-3">
+            <label for="has_coding_exercises" class="col-sm-2 col-form-label">has_coding_exercises</label>
+            <div class="col-sm-1">
+                <input type="checkbox" class="form-check-input" id="has_coding_exercises" aria-describedby="has_coding_exercisesHelpInline" onChange="onChange(this)">
+            </div>
+            <div class="col-auto">
+                <span id="has_coding_exercisesHelpInline" class="form-text">
+                    Filter courses that has coding exercises.
+                </span>
+            </div>
+        </div>
+        <div class="row mb-3">
+            <label for="has_simple_quiz" class="col-sm-2 col-form-label">has_simple_quiz</label>
+            <div class="col-sm-1">
+                <input type="checkbox" class="form-check-input" id="has_simple_quiz" aria-describedby="has_simple_quizHelpInline" onChange="onChange(this)">
+            </div>
+            <div class="col-auto">
+                <span id="has_simple_quizHelpInline" class="form-text">
+                    Filter courses that has simple quiz.
+                </span>
+            </div>
+        </div>
+        <div class="row mb-3">
+            <label for="instructional_level" class="col-sm-2 col-form-label">instructional_level</label>
+            <div class="col-sm-3">
+                <select id="instructional_level" class="form-select" aria-label="All"
+                aria-describedby="instructional_levelHelpInline" onchange="onChange(this)">
+                <option selected>All</option>
+                <option value="beginner">beginner</option>
+                <option value="intermediate">intermediate</option>
+                <option value="expert">expert</option>
+            </select>
+            </div>
+            <div class="col-auto">
+                <span id="instructional_levelHelpInline" class="form-text">
+                    Filter courses by instructional level.
+                </span>
+            </div>
+        </div>
+        <div class="row mb-3">
+            <label for="ordering" class="col-sm-2 col-form-label">ordering</label>
+            <div class="col-sm-3">
+                <select id="ordering" class="form-select" aria-label="All"
+                aria-describedby="orderingHelpInline" onchange="onChange(this)">
+                <option selected>All</option>
+                <option value="relevance">relevance</option>
+                <option value="most-reviewed">most-reviewed</option>
+                <option value="highest-rated">highest-rated</option>
+                <option value="newest">newest</option>
+                <option value="price-low-to-high">price-low-to-high</option>
+                <option value="price-high-to-low">price-high-to-low</option>
+            </select>
+            </div>
+            <div class="col-auto">
+                <span id="orderingHelpInline" class="form-text">
+                    Rank courses by relevance, most-reviewed, highest-rated, newest, price-low-to-high, or price-high-to-low. 
+                </span>
+            </div>
+        </div>
+        <div class="row mb-3">
+            <label for="ratings" class="col-sm-2 col-form-label">ratings</label>
+            <div class="col-sm-1">
+              <input type="number" class="form-control" id="ratings" aria-describedby="ratingsHelpInline" min="1.0" max="5.0" oninput="onChange(this)">
+            </div>
+            <div class="col-auto">
+                <span id="ratingsHelpInline" class="form-text">
+                    Filter courses by minimum average rating.
+                </span>
+            </div>
+        </div>
+        <div class="row mb-3">
+            <label for="duration" class="col-sm-2 col-form-label">duration</label>
+            <div class="col-sm-2">
+                <select id="duration" class="form-select" aria-label="All"
+                aria-describedby="orderingHelpInline" onchange="onChange(this)">
+                <option selected>All</option>
+                <option value="short">short</option>
+                <option value="medium">medium</option>
+                <option value="long">long</option>
+                <option value="extraLong">extraLong</option>
+            </select>
+            </div>
+            <div class="col-auto">
+                <span id="orderingHelpInline" class="form-text">
+                    Filter courses by course duration.
+                </span>
+            </div>
+        </div>
+        </div>
+    </div>
+</body>
+
+<script>
+    const search = {};
+
+    function getQuery() {
+        let query = 'https://www.udemy.com/api-2.0/courses/?fields[course]=@default,created';
+        const params = [];
+        for (let field in search) {
+            params.push(`${field}=${search[field]}`);
+        }
+        if (params.length > 0) {
+            query += `&${encodeURI(params.join('&'))}`;
+        }
+        document.getElementById('query').innerText = query;
+        document.getElementById('destination').value = query;
+    }
+
+    function onChange(e) {
+        if (e.type === 'checkbox') {
+            if (e.checked) {
+                search[e.id] = "True";
+            }
+            else if (search[e.id]) delete search[e.id];
+        }
+        else {
+            if (e.value && e.value !== e.getAttribute('aria-label')) {
+                search[e.id] = e.value;
+            }
+            else if (search[e.id]) delete search[e.id];                
+        }
+        getQuery();
+    }
+
+    window.onload = function () {
+        const inputs = document.getElementsByTagName('input').filter(i => i.type !== 'hidden');
+        for (let input of inputs) {
+            if (input.type === 'checkbox') {
+                if (input.checked) search[input.id] = "True";
+            }
+            else if (input.value) search[input.id] = input.value;
+        }
+        const selects = document.getElementsByTagName('select');
+        for (let select of selects) {
+            if (select.value && select.value !== select.getAttribute('aria-label')) search[select.id] = select.value;
+        }
+        getQuery();
+    };
+</script>
+<%- include('../templates/footer'); -%>

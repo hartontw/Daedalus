@@ -19,7 +19,7 @@ const options = {
         )
     },
     file: {
-        filename: process.env.LOG_FILE || 'Daedalus.log',
+        filename: process.env.LOG_FILE || './data/Bot.log',
         level: 'debug',
         format: basicFormat,
         maxsize: 5120000,

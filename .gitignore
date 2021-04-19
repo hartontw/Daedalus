@@ -174,3 +174,6 @@ $RECYCLE.BIN/
 
 # PM2
 ecosystem.json
+
+# Data
+data/
