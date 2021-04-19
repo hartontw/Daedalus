@@ -15,5 +15,5 @@ function filter(link) {
 }
 
 module.exports = link => {
-    return filter(link.destination)(new Date(link.lastUpdate - (3600000 * 24 * 60)), link.destination);
+    return filter(link.destination)(new Date(link.lastUpdate), link.destination);
 }

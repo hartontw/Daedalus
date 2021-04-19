@@ -1,7 +1,7 @@
 const fs = require('fs');
 const { v4: uuidv4 } = require('uuid');
 
-const FILE = process.env.CONNECTION_STRING || '../../data/Daedalus.json';
+const FILE = process.env.CONNECTION_STRING || './data/Daedalus.json';
 
 let data = {
     links: {}

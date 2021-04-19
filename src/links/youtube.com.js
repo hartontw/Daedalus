@@ -4,7 +4,7 @@ const URL = require('url').URL;
 
 function getChannelId(url){
     return new Promise( (resolve, reject) => {
-        const user = url.pathname.match(/^\/(?:u|user)\/([^/]+)/);
+        const user = url.pathname.match(/^\/(?:u|user|c)\/([^/]+)/);
         if (user) {
             youtube.channels.list({
                 part: 'id',
@@ -20,7 +20,7 @@ function getChannelId(url){
             });
         }
         else {
-            const channel = url.pathname.match(/^\/(?:c|channel)\/([^/]+)/);
+            const channel = url.pathname.match(/^\/(?:channel)\/([^/]+)/);
             resolve(channel[1]);
         }
     });
