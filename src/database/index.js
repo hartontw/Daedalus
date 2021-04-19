@@ -1,4 +1,13 @@
-const db = require('./json/database');
+function getDB() {
+    const fs = require('fs');
+    const dependencies = JSON.parse(fs.readFileSync('./package.json')).dependencies;
+    if (dependencies.mongoose) return require('./mongo/index');
+    //else if (dependencies.sqlite) return requite('./sqlite/index);
+    //else if (dependencies.mariadb) return requite('./mariadb/index);
+    return require('./json/database');
+}
+
+const db = getDB();
 const CronJob = require('cron').CronJob;
 const logger = require('../logger');
 const links = require('../links/index');
