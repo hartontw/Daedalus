@@ -1,8 +1,9 @@
 const fs = require('fs');
+const path = require('path');
 const request = require('request');
 
 const url = 'https://datahub.io/core/language-codes/r/language-codes.json';
-const FILE = './data/languajes.json';
+const FILE = path.join(__dirname, '..', '..', 'data', 'languajes.json');
 
 function getFile() {
     if (fs.existsSync(FILE)) {

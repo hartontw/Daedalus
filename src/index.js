@@ -1,11 +1,14 @@
 require('dotenv').config();
+
 const fs = require('fs');
+const path = require('path');
+const dataFolder = path.join(__dirname, '..', 'data');
+if (!fs.existsSync(dataFolder)) fs.mkdirSync(dataFolder);
+
 const logger = require('./logger');
 const bot = require('./bot');
 const data = require('./database/index');
 const web = require('./frontend/index');
-
-if (!fs.existsSync('./data/')) fs.mkdirSync('data');
 
 bot.start()
 .then(data.start)

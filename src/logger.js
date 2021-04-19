@@ -1,3 +1,4 @@
+const path = require('path');
 const { createLogger, format, transports } = require('winston');
 
 const basicFormat = format.combine(
@@ -19,7 +20,7 @@ const options = {
         )
     },
     file: {
-        filename: process.env.LOG_FILE || './data/Bot.log',
+        filename: process.env.LOG_FILE || path.join(__dirname, '..', 'data', 'App.log'),
         level: 'debug',
         format: basicFormat,
         maxsize: 5120000,

@@ -1,8 +1,9 @@
 const fs = require('fs');
+const path = require('path');
 const request = require('request');
 
 const url = 'http://worldtimeapi.org/api/timezone';
-const FILE = './data/timezones.json';
+const FILE = path.join(__dirname, '..', '..', 'data', 'timezones.json');
 
 function getFile() {
     if (fs.existsSync(FILE)) {
