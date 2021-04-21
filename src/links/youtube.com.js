@@ -39,23 +39,25 @@ module.exports = (date, link) => {
             order: 'date',
             safeSearch: 'none',
             videoEmbeddable: true
-        };
+        };        
 
         getChannelId(url)
         .then(id => {
             if (id) options.channelId = id;
             youtube.search.list(options, (err, response) => {
                 if (!err) {
+                    let lastUpdate;
                     const results = [];
                     if (response && response.data && response.data.items) {
                         response.data.items.forEach(item => {                            
                             const publishDate = new Date(item.snippet.publishedAt || item.snippet.publishTime);
                             if (publishDate > date) {
+                                lastUpdate = lastUpdate ? Math.max(lastUpdate, publishDate) : publishDate;
                                 results.push(`https://youtu.be/${item.id.videoId}`);
                             }
                         });
                     }
-                    resolve(results);
+                    resolve({results, lastUpdate});
                 }
                 else {
                     reject(err);

@@ -14,10 +14,14 @@ const linkSchema = new Schema({
         validate: [validateURL, 'Please fill a valid url destination'],
         match: [/(http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-/]))?/, 'Please fill a valid url destination']
     },
+    lastUpdate : {
+        type: Date,
+        default: Date.now()
+    },
     cronjob: {
         rule: { type: String, default: '0 0 */1 * * *' },
         timezone: { type: String, default: 'Europe/Madrid' }
-    },
+    },    
     name: String,
     pictureURL: String,
     channels: [String]

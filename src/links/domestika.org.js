@@ -5,14 +5,18 @@ const { MessageEmbed } = require('discord.js');
 module.exports = (date, link) => {
     return new Promise( (resolve, reject) => {       
         request(link, (err, res, body) => {
-            if (!err)  {                
+            if (!err)  {
+                let lastUpdate;                
                 const results = [];
+
                 const $ = cheerio.load(body);
                 $('.job-item').each(function (i, elm) {
                     let jobDate = $(elm).find('.job-item__date').text().trim().split('/');
                     jobDate = new Date(Date.UTC(Number(jobDate[2]) + 2000, (jobDate[1] - 1) % 12, jobDate[0]));
         
                     if (jobDate > date) {
+                        lastUpdate = lastUpdate ? Math.max(lastUpdate, jobDate) : jobDate;
+
                         const thumb = $(elm).find('.job-item__logo');
         
                         const url = $(thumb).attr('href');
@@ -43,7 +47,8 @@ module.exports = (date, link) => {
                         results.push(embed);
                     }
                 }); 
-                resolve(results);               
+                
+                resolve({results, lastUpdate});               
             }
             else {
                 reject(err);

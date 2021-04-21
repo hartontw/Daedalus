@@ -5,10 +5,12 @@ module.exports = (date, link) => {
     return new Promise( (resolve, reject) => {       
         udemy.get(link)
         .then(json => {
+            let lastUpdate;
             const results = [];
             for(let result of json.results) {                
                 const created = new Date(result.created);
                 if (created > date) {
+                    lastUpdate = lastUpdate ? Math.max(lastUpdate, created) : created;
                     const embed = new MessageEmbed();
                     embed.setColor(0xEA5252);      
                     embed.setAuthor("Udemy", "https://aefam.org/wp-content/uploads/2018/10/udemy-logo.png");
@@ -21,7 +23,7 @@ module.exports = (date, link) => {
                     results.push(embed);
                 }
             }
-            resolve(results);
+            resolve({results, lastUpdate});
         })
         .catch(reject);
     });    

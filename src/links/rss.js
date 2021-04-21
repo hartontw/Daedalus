@@ -6,15 +6,23 @@ module.exports = (date, link) => {
         request(link, (err, res, body) => {
             if (!err) {
                 if (parser.validate(body)) {
-                    let entries = [];
+                    let lastUpdate;
+                    let results = [];
+
                     body = parser.parse(body);                        
                     if (body.feed) {
-                        entries = body.feed.entry.filter(i => new Date(i.published) > date).map(i => i.link || i.id);  
+                        results = body.feed.entry.filter(i => new Date(i.published) > date).map(i => i.link || i.id);  
                     }
                     else if (body.rss) {
-                        entries = body.rss.channel.item.filter(i => new Date(i.pubDate) > date).map(i => i.link || i.guid);
+                        results = body.rss.channel.item.filter(i => new Date(i.pubDate) > date).map(i => i.link || i.guid);
                     }
-                    resolve(entries.reverse());
+
+                    if (results.length > 0) {
+                        results = results.reverse();
+                        lastUpdate = Math.max.apply(Math, results.map(function(e) { return Date.parse(e.pubDate); }));
+                    }
+
+                    resolve({results, lastUpdate});
                 }
                 else {
                     reject(`Invalid RSS: ${link}`);

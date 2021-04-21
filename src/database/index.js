@@ -24,15 +24,17 @@ function cronStart(link)
 
     cronjobs.set(link._id, new CronJob(link.cronjob.rule, () => {
         db.getLinkById(link._id)
-        .then(link => {
-            db.updateLinkDate(link._id).catch(logger.error);
+        .then(link => {            
             if (link.channels.length > 0) {
                 links(link)
-                .then(results => {
+                .then( ({results, lastUpdate}) => {      
                     for(let result of results) {
                         for(let channel of link.channels) {
                             bot.sendToChannel(channel, result);
                         }
+                    }
+                    if (lastUpdate) {
+                        db.updateLinkDate(link._id, lastUpdate).catch(logger.error);
                     }
                 })
                 .catch(logger.error);

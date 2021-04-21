@@ -77,9 +77,14 @@ module.exports = (date, link) => {
         request(link, async (err, res, body) => {
             if (!err) {
                 if (parser.validate(body)) {
+                    let lastUpdate;
                     let results = [];
+
                     const entries = parser.parse(body).rss.channel.item.reverse().filter(i => new Date(i.pubDate) > date);
                     for(let entry of entries) {
+                        const pubDate = new Date(entry.pubDate);
+                        lastUpdate = lastUpdate ? Math.max(pubDate, lastUpdate) : pubDate;
+
                         const author = "Stratos";
                         const title = entry.title.match(/busca\s*(.+)/)[1].trim();
                         const company = entry.title.match(/(.+?)(?=busca)/)[1].trim();
@@ -109,7 +114,8 @@ module.exports = (date, link) => {
         
                         results.push(embed);
                     }
-                    resolve(results);
+
+                    resolve({results, lastUpdate});
                 }
                 else {
                     reject(`Invalid ${link}`);

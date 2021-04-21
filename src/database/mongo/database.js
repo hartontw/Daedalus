@@ -42,8 +42,8 @@ async function updateLink(link) {
     await Link.updateOne({_id:link._id}, {link});
 }
 
-async function updateLinkDate(id) {
-    await Link.updateOne({_id:id}, {lastUpdate: Date.now()});
+async function updateLinkDate(id, date = Date.now()) {
+    await Link.updateOne({_id:id}, {lastUpdate: date});
 }
 
 async function deleteLink(id) {

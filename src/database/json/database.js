@@ -68,10 +68,10 @@ function updateLink(link) {
     });
 }
 
-function updateLinkDate(id) {
+function updateLinkDate(id, date = Date.now()) {
     return new Promise( (resolve, reject) => {
         if (data.links[id]) {
-            data.links[id].lastUpdate = Date.now();
+            data.links[id].lastUpdate = date;
             save();
             resolve();
         }
