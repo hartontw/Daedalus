@@ -1,12 +1,17 @@
 const path = require('path');
 const { createLogger, format, transports } = require('winston');
+const { combine, timestamp, printf, colorize, errors } = format;
 
 const basicFormat = format.combine(
-    format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
-    format.printf(info => {
-        if (!info.stack) {
+    errors({ stack: true }), // Does nothing
+    timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
+    printf(info => {
+        if (info.stack) {            
+            return `[${info.timestamp}] ${info.level}: ${info.message}\n${info.stack}`;            
+        } 
+        else {
             return `[${info.timestamp}] ${info.level}: ${info.message}`;
-        } else return `[${info.timestamp}] ${info.level}: ${info.message}\n${info.stack}`;
+        }
     })
 );
 
@@ -14,8 +19,8 @@ const options = {
     console: {
         handleExceptions: true,
         level: 'debug',
-        format: format.combine(
-            format.colorize(),
+        format: combine(            
+            colorize(),
             basicFormat
         )
     },
@@ -34,5 +39,11 @@ const logger = createLogger({
         new transports.File(options.file),
     ]
 });
+
+// Because errors({ stack: true }) does nothing
+const error = logger.error;
+logger.error = e => {
+    error({message: e.message, stack:e.stack});
+}
 
 module.exports = logger;
