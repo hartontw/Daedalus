@@ -110,7 +110,8 @@ module.exports = (date, link) => {
                         embed.setURL(entry.link);
                         if (logo) {
                             embed.setThumbnail(logo);
-                        }                        
+                        }
+                        embed.setTimestamp(pubDate);
         
                         results.push(embed);
                     }

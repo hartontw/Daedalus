@@ -8,7 +8,6 @@ module.exports = (date, link) => {
             if (!err)  {
                 let lastUpdate;                
                 const results = [];
-
                 const $ = cheerio.load(body);
                 $('.job-item').each(function (i, elm) {
                     let jobDate = $(elm).find('.job-item__date').text().trim().split('/');
@@ -43,16 +42,17 @@ module.exports = (date, link) => {
                         embed.addField(company, description, true);
                         embed.setURL(url);
                         embed.setThumbnail(image);
+                        embed.setTimestamp(jobDate);
         
                         results.push(embed);
                     }
-                }); 
+                });
                 
-                resolve({results, lastUpdate});               
+                resolve({results, lastUpdate});
             }
             else {
                 reject(err);
-            }                      
+            }
         });        
     });    
 }

@@ -19,6 +19,7 @@ module.exports = (date, link) => {
                     embed.addField('Precio', result.is_paid ? result.price : 'Gratis');
                     embed.setURL(`https://udemy.com${result.url}`);
                     embed.setThumbnail(result.image_125_H);
+                    embed.setTimestamp(created);
     
                     results.push(embed);
                 }
