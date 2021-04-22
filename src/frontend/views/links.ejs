@@ -6,8 +6,8 @@
         <%for (let link of links){%>  
         <a href="/links/<%=link._id%>" style="text-decoration: none;">
           <li class="list-group-item clearfix" style="background-color:#FED;">            
-            <h3 class="list-group-item-heading">
-                <img class="img-responsive img-rounded" src="<%=link.pictureURL%>" style="width: 100px;height: 100px;margin-right: 10px;"/>
+            <h4 class="list-group-item-heading">
+                <img class="img-responsive img-rounded" src="<%=link.pictureURL%>" style="width:50px; height:50px; margin-right:5px;"/>
                 <%=link.name%>
             </h3>
             <span class="badge bg-primary"><%=link.destination%></span>
