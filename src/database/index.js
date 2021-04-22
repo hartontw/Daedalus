@@ -24,10 +24,11 @@ function cronStart(link)
 
     cronjobs.set(link._id, new CronJob(link.cronjob.rule, () => {
         db.getLinkById(link._id)
-        .then(link => {            
+        .then(link => {
             if (link.channels.length > 0) {
                 links(link)
-                .then( ({results, lastUpdate}) => {      
+                .then( ({results, lastUpdate}) => {
+                    logger.info(`${link.name || link.destination} => ${results.length} results.`);
                     for(let result of results) {
                         for(let channel of link.channels) {
                             bot.sendToChannel(channel, result);
@@ -73,6 +74,7 @@ function insertLink(link)
     return new Promise( (resolve, reject) => {
         db.insertLink(link)
         .then(link => {
+            logger.info(`New link => ${link._id}`);
             cronStart(link);
             resolve(link);
         })
@@ -85,6 +87,7 @@ function updateLink(link)
     return new Promise( (resolve, reject) => {
         db.updateLink(link)
         .then( () => {
+            logger.info(`Upated link => ${link._id}`);
             cronStart(link);
             resolve();
         })
@@ -97,10 +100,11 @@ function deleteLink(id)
     return new Promise( (resolve, reject) => {
         db.deleteLink(id)
         .then( () => {
+            logger.info(`Deleted link => ${id}`);
             if (cronjobs.has(id)) {
                 cronjobs.get(id).stop();
                 cronjobs.delete(id);
-            }
+            }            
             resolve();
         })
         .catch(reject);
